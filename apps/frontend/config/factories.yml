@@ -45,3 +45,4 @@ all:
     class: myUser
     param:
       timeout:    0 #session lifetime value in seconds
+#timeout currently disabled. to reenable, comment out function initialize() in tmcprogram_tacloban\apps\frontend\lib\myUser.php
