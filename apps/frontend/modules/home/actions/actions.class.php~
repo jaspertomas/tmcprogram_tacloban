@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * home actions.
+ *
+ * @package    sf_sandbox
+ * @subpackage home
+ * @author     Your name here
+ * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ */
+class homeActions extends sfActions
+{
+  public function executeIndex(sfWebRequest $request)
+  {
+/*
+    $records = Doctrine_Query::create()
+      ->from('invoicedetail i')
+      ->where('i.description like "%Kato Jack Pump 6 Strokes%"')
+      ->execute();
+
+    foreach($records as $record)
+    {
+      $record->setDescription(str_replace("Kato Jack Pump 6 Strokes","",$record->getDescription()));
+      $record->save();
+    }
+
+  //*
+
+		//display invoice ids with duplicate invnos
+		$invoices = Doctrine_Query::create()
+    	->select('i.invno')
+      ->from('Invoice i')
+      ->orderBy('invno')
+      ->execute();
+    foreach($invoices as $index=>$invoice)
+    {
+    	//if last item, forget it
+    	if($index==count($invoices)-1)break;
+    	if($invoice->getInvno()==$invoices[$index+1]->getInvno())
+    	{
+	    	//echo $invoice;
+	    	$invoices[$index+1]->setInvno($invoices[$index+1]->getInvno()."a");
+	    	$invoices[$index+1]->save();
+    	}
+    }
+
+/*    
+	//display invoice_ids of orphan invoicedetails (without invoice)
+		$invoices = Doctrine_Query::create()
+    	->select('i.id')
+      ->from('Invoice i')
+      ->fetchArray();
+      foreach($invoices as &$invoice)
+      	$invoice=$invoice["id"];
+      
+    $invoicedetails = Doctrine_Query::create()
+    	->select('id.invoice_id')
+      ->from('Invoicedetail id')
+      ->fetchArray();
+
+      foreach($invoicedetails as $detail)
+      {
+      	if(array_search($detail["invoice_id"],$invoices)===false)
+      		echo $detail["invoice_id"]."<br>";
+      }//*/
+      
+    /*
+    $records = Doctrine_Query::create()
+      ->from('Invoicedetail id')
+      ->where('product_id=0')
+      ->execute();
+    foreach($records as $record)
+    {
+      $product = Doctrine_Query::create()
+        ->from('Product pr')
+        ->where("pr.name='".str_replace("'","\'",$record->getDescription())."'")
+        ->fetchOne();
+      if($product)
+      {
+        $record->setProductId($product->getId());
+        $record->save();
+	    //echo $product->getId();
+      }
+    }
+    //*/
+    $items=EventTable::fetch(array());
+    foreach($items as $item)echo $item->getId();
+	}
+  public function executeError(sfWebRequest $request)
+  {
+  	$this->msg=$request->getParameter("msg");
+  }
+}

@@ -1,0 +1,19 @@
+        <div class="sf_admin_form_row sf_admin_foreignkey sf_admin_form_field_parent_id">
+        <div>
+      <label for="file_parent_id">Parent File</label>
+      <div class="content">
+             
+      <?php 
+        $parent=$form->getObject()->getParent();
+        echo '<input name="file[parent_id]" value="'.$parent->getId().'" id="file_parent_id" type="text" readonly=true> ';
+        if($parent->getId())
+        {
+          echo link_to($parent,"file/view?id=".$parent->getId());
+          echo " ";
+          echo link_to("(Edit)","file/edit?id=".$parent->getId());
+        }
+      ?>
+      </div>
+      </div>
+      </div>
+

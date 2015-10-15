@@ -1,0 +1,50 @@
+<?php use_helper('I18N', 'Date') ?>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+function checkAll()
+{
+  var boxes = document.getElementsByTagName('input'); 
+  for(var index = 0; index < boxes.length; index++) 
+  { 
+    box = boxes[index]; 
+    if (box.type == 'checkbox') 
+      box.checked = document.getElementById('sf_admin_list_batch_checkbox').checked;
+  } 
+  return true;
+}
+/* ]]> */
+</script>
+
+<?php echo html_entity_decode($producttype->getBreadcrumbs()); ?>
+&nbsp;&nbsp;<?php if(!$producttype->isRoot())echo link_to("(Edit)","producttype/edit?id=".$producttype->getId()) ?>
+<hr>
+<h1><?php echo $producttype->getName() ?></h1>
+
+<?php echo form_tag("producttype/view?id=".$producttype->getId(),array("method"=>"get"))?>
+View <input name=levels size=1 value=<?php echo $levels?>><input type=submit name=submit value=Levels />
+</form>
+<br>
+<?php echo form_tag_for(new ProducttypeForm(),"producttype/massoper")?>
+<table>
+  <tr>
+    <td>Id</td>
+    <td><input id="sf_admin_list_batch_checkbox" onclick="checkAll();" type="checkbox"></td>
+    <td>Name</td>
+    <td>Description</td>
+    <td>Type</td>
+  </tr>
+
+  <?php include_partial("showchildren",array("producttype"=>$producttype,"children"=>$producttype->getChildren(),"levels"=>$levels,"level"=>0)); ?>
+
+</table>
+
+<?php echo link_to("Add Child","producttype/new?parent_id=".$producttype->getId()) ?>
+<br>
+<br>
+<input name=parent_id size=1 >
+<input type=submit name=submit value=Move />
+<input type=submit name=submit value=Copy />
+</form>
+
+

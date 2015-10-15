@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <?php include_http_metas() ?>
+    <?php include_metas() ?>
+    <?php include_title() ?>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <?php include_stylesheets() ?>
+    <?php include_javascripts() ?>
+  </head>
+  <body>
+    <p>
+    <?php echo link_to("Home",'home/index'); ?> | 
+    <?php echo link_to("New Invoice",'invoice/new'); ?> | 
+    <?php echo link_to("New Purchase Order",'purchase/new'); ?> | 
+    <?php echo link_to("New Product",'product/new'); ?> | 
+    <?php echo link_to("New Customer",'customer/new'); ?> | 
+    <?php echo link_to("New Vendor",'vendor/new'); ?> | 
+    <?php echo link_to("New Stock",'stock/new'); ?> | 
+    </p>
+    <p>
+    <?php echo link_to("Home",'home/index'); ?> | 
+    <?php echo link_to("Invoice",'invoice',array('sort'=>'invno','sort_type'=>'desc')); ?> | 
+    <?php echo link_to("Purchase Order",'purchase',array('sort'=>'pono','sort_type'=>'desc')); ?> | 
+    <?php echo link_to("Product",'product'); ?> | 
+    <?php echo link_to("Customer",'customer'); ?> | 
+    <?php echo link_to("Vendor",'vendor'); ?> | 
+    <?php echo link_to("Product Type",'producttype/view?id=1'); ?> | 
+    <?php echo link_to("Brand",'brand'); ?> | 
+    <?php echo link_to("DSR",'invoice/dsr'); ?> | 
+    <?php echo link_to("Warehouses",'warehouse'); ?> | 
+    <?php echo link_to("Notes",'notes/view?id=1'); ?> | 
+    <?php echo link_to("Stock",'stock'); ?> | 
+    <?php echo link_to("Product Merge",'product/merge'); ?> | 
+    <?php echo link_to("Price List",'product/pricelist'); ?> | 
+    </p>
+
+  
+    <?php echo $sf_content ?>
+  </body>
+</html>

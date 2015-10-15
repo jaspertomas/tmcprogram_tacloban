@@ -1,0 +1,136 @@
+<?php
+
+require_once dirname(__FILE__).'/../lib/##MODULE_NAME##GeneratorConfiguration.class.php';
+require_once dirname(__FILE__).'/../lib/##MODULE_NAME##GeneratorHelper.class.php';
+
+/**
+ * ##MODULE_NAME## actions.
+ *
+ * @package    ##PROJECT_NAME##
+ * @subpackage ##MODULE_NAME##
+ * @author     ##AUTHOR_NAME##
+ * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ */
+class ##MODULE_NAME##Actions extends auto##UC_MODULE_NAME##Actions
+{
+  public function executeView(sfWebRequest $request)
+  {
+    $this->##MODULE_NAME## = $this->getRoute()->getObject();
+    $this->form = $this->configuration->getForm($this->##MODULE_NAME##);
+    $this->levels=$request->getParameter("levels");
+    if($this->levels=="")$this->levels=1;
+  }
+  public function executeNew(sfWebRequest $request)
+  {
+    $this->##MODULE_NAME## = new ##UC_MODULE_NAME##();
+    $this->##MODULE_NAME##->setParentId($request->getParameter("parent_id"));
+    $this->form = $this->configuration->getForm($this->##MODULE_NAME##);
+  }
+  public function executeEdit(sfWebRequest $request)
+  {
+    $this->##MODULE_NAME## = $this->getRoute()->getObject();
+    //prevent edit of home page
+    if($this->##MODULE_NAME##->isHome())$this->redirect("##MODULE_NAME##/view?id=1");
+    $this->form = $this->configuration->getForm($this->##MODULE_NAME##);
+  }
+  protected function processForm(sfWebRequest $request, sfForm $form)
+  {
+    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+    if ($form->isValid())
+    {
+      $notice = $form->getObject()->isNew() ? 'The item was created successfully.' : 'The item was updated successfully.';
+
+      try {
+        $##MODULE_NAME## = $form->save();
+      
+        //custom calculation
+        $##MODULE_NAME##->getParent()->calc();
+        
+      } catch (Doctrine_Validator_Exception $e) {
+
+        $errorStack = $form->getObject()->getErrorStack();
+
+        $message = get_class($form->getObject()) . ' has ' . count($errorStack) . " field" . (count($errorStack) > 1 ?  's' : null) . " with validation errors: ";
+        foreach ($errorStack as $field => $errors) {
+            $message .= "$field (" . implode(", ", $errors) . "), ";
+        }
+        $message = trim($message, ', ');
+
+        $this->getUser()->setFlash('error', $message);
+        return sfView::SUCCESS;
+      }
+
+      $this->dispatcher->notify(new sfEvent($this, 'admin.save_object', array('object' => $##MODULE_NAME##)));
+
+      if ($request->hasParameter('_save_and_add'))
+      {
+        $this->getUser()->setFlash('notice', $notice.' You can add another one below.');
+        $this->redirect('@##MODULE_NAME##_new?parent_id='.$##MODULE_NAME##->getParentId());
+     }
+      else
+      {
+        $this->getUser()->setFlash('notice', $notice);
+
+        $this->redirect($request->getReferer());
+      }
+    }
+    else
+    {
+      $this->getUser()->setFlash('error', 'The item has not been saved due to some errors.', false);
+    }
+  }
+  public function executeDelete(sfWebRequest $request)
+  {
+    $request->checkCSRFProtection();
+
+    $parent=$this->getRoute()->getObject()->getParent();
+    $this->dispatcher->notify(new sfEvent($this, 'admin.delete_object', array('object' => $this->getRoute()->getObject())));
+
+    if ($this->getRoute()->getObject()->isRoot())
+    {
+      $this->getUser()->setFlash('error', 'Cannot delete root node');
+    }
+    elseif ($this->getRoute()->getObject()->delete())
+    {
+      $this->getUser()->setFlash('notice', 'The item was deleted successfully.');
+    }
+
+    $this->redirect($request->getReferer());
+  }
+  public function executeMassoper(sfWebRequest $request)
+  {
+    $parent_id=$request->getParameter("parent_id");
+    $parent=##UC_MODULE_NAME##Table::fetch($parent_id);
+	  $children=$parent->getChildren();
+	  $priority=$children[count($children)-1]->getPriority()+2;
+    
+  	$ids=$request->getParameter("ids");
+  	
+  	if($request->getParameter("submit")=="Copy")
+  	{
+  	  
+  	  
+    	foreach($ids as $id)
+    	{
+    	  $##MODULE_NAME##=##UC_MODULE_NAME##Table::fetch($id);
+    	  $new##MODULE_NAME##=$##MODULE_NAME##->copy##UC_MODULE_NAME##();
+
+    	  $new##MODULE_NAME##->setParentId($parent_id);
+    	  $new##MODULE_NAME##->setPriority($priority);$priority+=2;
+    	  $new##MODULE_NAME##->save();
+    	}
+  	}
+  	else //move
+  	{
+    	foreach($ids as $id)
+    	{
+    	  $##MODULE_NAME##=##UC_MODULE_NAME##Table::fetch($id);
+    	  $##MODULE_NAME##->setParentId($parent_id);
+    	  $##MODULE_NAME##->setPriority($priority);$priority+=2;
+    	  $##MODULE_NAME##->save();
+    	}
+  	}
+  	$parent->calc();
+    $this->redirect($request->getReferer());
+  }
+}

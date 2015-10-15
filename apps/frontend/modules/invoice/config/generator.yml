@@ -1,0 +1,32 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Invoice
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          invoice
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  
+        cheque: { label: Check no }
+        chequedate: { label: Check date }
+        checkcleardate: { label: Check receive date }
+      list:    
+        sort: [date, desc]
+        display: [date, invoice_template, =invno, customer, notes, total, status]
+        object_actions: 
+          view: {action: view}
+          _edit: ~
+          _delete: ~
+      filter:  
+        display: [date, template_id, invno, customer_id, salesman_id, saletype, status]
+      form:    
+        display: [_header, customer_id, customer_name, customer_phone, salesman_id, date, template_id, invno, technician_id, saletype, cash, chequeamt, credit, checkcleardate, chequedate, cheque, dsrdeduction, notes, ponumber, payonly, status, is_temporary, hidden]
+      edit:    ~
+      new:     ~

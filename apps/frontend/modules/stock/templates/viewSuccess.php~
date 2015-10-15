@@ -1,0 +1,56 @@
+<?php use_helper('I18N', 'Date') ?>
+<h1>Stock: <?php echo $stock->getProduct()?></h1>
+
+<?php $stockentries=$stock->getStockEntries()?>
+
+<table>
+  <tr>
+    <td>Warehouse</td>
+    <td><?php echo $stock->getWarehouse() ?></td>
+  </tr>
+  <tr>
+    <td>Product</td>
+    <td><?php echo $stock->getProduct() ?></td>
+  </tr>
+  <tr>
+    <td>Qty</td>
+    <td><?php echo $stockentries[0]->getQty()." as of ".MyDateTime::frommysql($stockentries[0]->getDate())->toshortdate()?></td>
+  </tr>
+  <tr>
+    <td>Initial record</td>
+    <td><?php echo $stock->getQty()." as of ".MyDateTime::frommysql($stock->getDate())->toshortdate()?></td>
+  </tr>
+  <tr>
+    <td><?php echo link_to("Edit","stock/edit?id=".$stock->getId()) ?></td>
+  </tr>
+</table>
+
+<br>
+<?php echo link_to("Add Detail","stockentry/new?stock_id=".$stock->getId()) ?>
+<table border=1>
+  <tr>
+    <td>Date</td>
+    <td>Stock In</td>
+    <td>Stock Out</td>
+    <td>Balance</td>
+    <td>Ref</td>
+  </tr>
+  <?php foreach($stockentries as $detail){?>
+  <tr>
+    <td><?php echo MyDateTime::frommysql($detail->getDate())->toshortdate() ?></td>
+    <td align=right><?php if($detail->getIsFwd())echo "Balance";else if($detail->getQty()>0)echo MyDecimal::format($detail->getQty()) ?></td>
+    <td align=right><?php if($detail->getIsFwd())echo "Forwarded";else if($detail->getQty()<0)echo MyDecimal::format($detail->getQty()*-1) ?></td>
+    <td align=right><?php echo $detail->getBalance() ?></td>
+    <td><?php 
+      
+      if($detail->getRefClass()=="Invoicedetail"){$ref=$detail->getRef();echo link_to($ref->getInvoice(),"invoice/view?id=".$ref->getInvoiceId());}
+      else if($detail->getRefClass()=="Purchasedetail")echo link_to($ref->getPurchase(),"purchase/view?id=".$ref->getPurchaseId());
+      else if($detail->getRefClass())echo link_to($detail->getRef(),strtolower($detail->getRefClass())."/view?id=".$detail->getRefId());
+      ?></td>
+    <td><?php echo link_to("Edit","stockentry/edit?id=".$detail->getId()) ?></td>
+    <td><?php echo link_to('Delete','stockentry/delete?id='.$detail->getId(),array('method' => 'delete', 'confirm' => 'Are you sure?')) ?></td>
+  </tr>
+  <?php }?>
+</table>
+
+

@@ -1,0 +1,40 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Product
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          product
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list:    
+        max_per_page: 50
+        display: [=name, producttype, current_qty, maxsellprice, minsellprice, description] #
+        sort: [name, desc]
+        object_actions: 
+          view: {action: view, label: Transactions}
+          _edit: ~
+          stock: {action: inventory}
+          _delete: ~
+          pricelist: {action: pricelist}
+        batch_actions: 
+          _setproducttype: ~
+
+      filter:  ~
+#        display: [brand_id]
+      form:    
+        display: [_header, name, producttype_id, qty, minbuyprice, maxbuyprice, minsellprice, maxsellprice, description, category1, category2, category3, category4, category5, category6, category7, category8, category9, category10, publish, autocalcsellprice, autocalcbuyprice, monitored, barcode, is_service]
+        actions: 
+          _delete: ~
+          _cancel: {action: view}
+          _save: ~
+          _save_and_add: ~
+      edit:    ~
+      new:     ~

@@ -1,0 +1,26 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Customer
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          customer
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list:    
+        display: [ =name, address, phone1, phone2]
+        object_actions:
+          view: { action: view} 
+          _edit: ~
+          _delete: ~
+      filter:  ~
+      form:    ~
+      edit:    ~
+      new:     ~

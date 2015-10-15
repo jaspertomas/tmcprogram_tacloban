@@ -1,0 +1,26 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Notes
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          notes
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list:    
+        object_actions:
+          view: {action: view}
+          _edit: ~
+          _delete: ~
+      filter:  ~
+      form:    
+        display: [_parent_id, name, description, status, _content, priority]
+      edit:    ~
+      new:     ~

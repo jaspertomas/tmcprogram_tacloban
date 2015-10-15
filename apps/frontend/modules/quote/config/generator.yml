@@ -1,0 +1,26 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Quote
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          quote
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list:    
+        display: [ id, date, vendor, product, price, ref_class, ref_id, total]
+        object_actions:
+          pricelist: { action: pricelist }
+          _edit: ~
+          _delete: ~
+      filter:  ~
+      form:    ~
+      edit:    ~
+      new:     ~

@@ -1,0 +1,90 @@
+<?php
+
+require_once dirname(__FILE__).'/../lib/stockentryGeneratorConfiguration.class.php';
+require_once dirname(__FILE__).'/../lib/stockentryGeneratorHelper.class.php';
+
+/**
+ * stockentry actions.
+ *
+ * @package    sf_sandbox
+ * @subpackage stockentry
+ * @author     Your name here
+ * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ */
+class stockentryActions extends autoStockentryActions
+{
+  public function executeNew(sfWebRequest $request)
+  {
+    $this->stockentry = new Stockentry();
+    $this->stockentry->setstockId($request->getParameter("stock_id"));
+    $this->stockentry->setDate(MyDate::today());
+    $this->stockentry->setQty(1);
+    $this->form = $this->configuration->getForm($this->stockentry);
+  }
+  protected function processForm(sfWebRequest $request, sfForm $form)
+  {
+    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+    if ($form->isValid())
+    {
+      $notice = $form->getObject()->isNew() ? 'The item was created successfully.' : 'The item was updated successfully.';
+
+      try {
+        $stockentry = $form->save();
+      
+        //custom calculation
+        $stock=$stockentry->getStock();
+        $stock->calc($stockentrydate);
+        
+      } catch (Doctrine_Validator_Exception $e) {
+
+        $errorStack = $form->getObject()->getErrorStack();
+
+        $message = get_class($form->getObject()) . ' has ' . count($errorStack) . " field" . (count($errorStack) > 1 ?  's' : null) . " with validation errors: ";
+        foreach ($errorStack as $field => $errors) {
+            $message .= "$field (" . implode(", ", $errors) . "), ";
+        }
+        $message = trim($message, ', ');
+
+        $this->getUser()->setFlash('error', $message);
+        return sfView::SUCCESS;
+      }
+
+      $this->dispatcher->notify(new sfEvent($this, 'admin.save_object', array('object' => $stockentry)));
+
+      if ($request->hasParameter('_save_and_add'))
+      {
+        $this->getUser()->setFlash('notice', $notice.' You can add another one below.');
+        $this->redirect('@stockentry_new?stock_id='.$stock->getId());
+     }
+      else
+      {
+        $this->getUser()->setFlash('notice', $notice);
+
+        $this->redirect('stock/view?id='.$stockentry->getstockId());
+      }
+    }
+    else
+    {
+      $this->getUser()->setFlash('error', 'The item has not been saved due to some errors.', false);
+    }
+  }
+  public function executeDelete(sfWebRequest $request)
+  {
+    $request->checkCSRFProtection();
+
+    $stockentry=$this->getRoute()->getObject();
+    $stock=$stockentry->getStock();
+    $this->dispatcher->notify(new sfEvent($this, 'admin.delete_object', array('object' => $this->getRoute()->getObject())));
+
+    $stockentrydate=$stockentry->getDate();
+
+    if ($stockentry->delete())
+    {
+      $this->getUser()->setFlash('notice', 'The item was deleted successfully.');
+    }
+
+    $stock->calc($stockentrydate);
+    $this->redirect('stock/view?id='.$stock->getId());
+  }
+}
+

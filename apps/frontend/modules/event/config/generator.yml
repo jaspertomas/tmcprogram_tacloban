@@ -1,0 +1,27 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Event
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          event
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  
+        date: { label: Check receive date }
+        checkcleardate: { label: Check date }
+        detail1: { label: Check no }
+        detail2: { label: Check clear date string}
+        detail3: { label: DSR Deduction }
+      list:    ~
+      filter:  ~
+      form:    
+        display: [amount, type, parent_class, parent_id, parent_name, child_class, children_id, date, checkcleardate, detail1, detail3, notes, is_cancelled]
+      edit:    ~
+      new:     ~

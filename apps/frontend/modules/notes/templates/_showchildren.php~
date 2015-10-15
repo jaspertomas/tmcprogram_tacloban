@@ -1,0 +1,25 @@
+  <?php foreach($children as $child){
+          if($child->isRoot())
+            continue;
+          $spacer="";
+          for($step=0;$step<$level;$step++)
+            $spacer.="&nbsp;>&nbsp;";
+  ?>
+  <tr>
+    <td><?php echo $child->getId() ?></td>
+    <td><input type=checkbox name="ids[]" value="<?php echo $child->getId()?>" /></td>
+    <td><?php echo $spacer.link_to($child->getName(),"##MODULE_NAME##/view?id=".$child->getId()) ?></td>
+    <td><?php echo $child->getDescription() ?></td>
+    <td><?php echo $child->getType() ?></td>
+    <td><?php echo link_to("View","##MODULE_NAME##/view?id=".$child->getId()) ?></td>
+    <td><?php echo link_to("Edit","##MODULE_NAME##/edit?id=".$child->getId()) ?></td>
+    <td><?php echo link_to('Delete','##MODULE_NAME##/delete?id='.$child->getId(),array('method' => 'delete', 'confirm' => 'Are you sure?')) ?></td>
+    <td><?php echo link_to("Add Child","##MODULE_NAME##/new?parent_id=".$child->getId()) ?></td>
+    <td><input  size=1 value=<?php echo $child->getPriority()?>></td>
+    <td><input type=submit value=Sort></td>
+  </tr>
+  <?php 
+    $grandchildren=$child->getChildren();
+    if($grandchildren and $levels>$level)include_partial("showchildren",array("##MODULE_NAME##"=>$child,"children"=>$grandchildren,"levels"=>$levels,"level"=>$level+1)); ?>
+  <?php }?>
+

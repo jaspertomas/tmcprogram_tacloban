@@ -1,0 +1,50 @@
+default:
+  is_secure: true
+  credentials: [[sales,encoder]]
+index:
+  is_secure: false
+view:
+  is_secure: false
+search:
+  is_secure: false
+events:
+  is_secure: false
+edit:
+  is_secure: true
+  credentials: [[sales,encoder,cashier]]
+cancel:
+  is_secure: true
+  credentials: [[encoder,cashier,sales]]
+update:
+  is_secure: true
+  credentials: [[sales,encoder,cashier]]
+listnew:
+  is_secure: true
+  credentials: [[sales,encoder]]
+listcheckedout:
+  is_secure: true
+  credentials: cashier
+listunpaid:
+  is_secure: true
+  credentials: cashier
+finalize:
+  is_secure: true
+  credentials: cashier
+undocheckout:
+  is_secure: true
+  credentials: cashier
+setsaletype:
+  is_secure: true
+  credentials: [[sales,encoder]]
+dsr:
+  is_secure: true
+  credentials: [[encoder,cashier]]
+dsrpdf:
+  is_secure: true
+  credentials: [[encoder,cashier]]
+dsrmulti:
+  is_secure: true
+  credentials: [[encoder,cashier]]
+dsrmultipdf:
+  is_secure: true
+  credentials: [[encoder,cashier]]

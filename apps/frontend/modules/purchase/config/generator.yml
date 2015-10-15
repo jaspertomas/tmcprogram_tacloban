@@ -1,0 +1,31 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Purchase
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          purchase
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  
+        datereceived: { label: "Date Received"}
+        pono: { label: "PO/Cash Voucher No."}
+      list:    
+        sort: [date, desc]
+        display: [date, datereceived, =pono, vendor, vendor_invoice, total, status]#template, 
+        object_actions: 
+          view: {action: view}
+          _edit: ~
+          _delete: ~
+      filter:  
+        display: [ date, pono, vendor_id, vendor_invoice]
+      form:    
+        display: [date, datereceived, template_id, pono, vendor_id, vendor_invoice, invno, employee_id, type, cash, cheque, credit, chequeno, chequedate, discrate, discamt, memo, status]
+      edit:    ~
+      new:     ~

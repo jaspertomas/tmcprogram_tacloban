@@ -1,0 +1,32 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Product
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          product
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list:    
+        max_per_page: 50
+        display: [=name, brand, producttype, qty, price, description, category1, category2, category3, category4, category5]
+        sort: [name, desc]
+        object_actions: 
+          view: {action: view}
+          inventory: {action: view}
+          _edit: ~
+          _delete: ~
+        batch_actions: 
+          _setproducttype: ~
+
+      filter:  ~
+      form:    ~
+      edit:    ~
+      new:     ~

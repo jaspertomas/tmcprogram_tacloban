@@ -1,0 +1,218 @@
+<?php use_helper('I18N', 'Date') ?>
+<h1>Invoice Edit</h1>
+<?php slot('transaction_id', $invoice->getId()) ?>
+<?php slot('transaction_type', "Invoice") ?>
+
+<table>
+  <tr valign=top>
+    <td>
+      <table>
+        <tr>
+          <td>Date</td>
+          <td><?php echo $invoice->getDate() ?></td>
+        </tr>
+        <tr>
+          <td>Inv no.</td>
+          <td><?php echo $invoice->getInvoiceTemplate()." ".$invoice->getInvno() ?></td>
+        </tr>
+        <tr>
+          <td>PO No.</td>
+          <td><?php echo $invoice->getPonumber() ?></td>
+        </tr>
+        <tr>
+          <td>Customer</td>
+          <td><?php echo link_to($invoice->getCustomer(),"customer/edit?id=".$invoice->getCustomerId(),array("target"=>"edit_customer"))." (".$invoice->getCustomer()->getTinNo().")"; ?></td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td><?php echo $invoice->getCash()."+".$invoice->getChequeamt()."+".$invoice->getCredit()."=".$invoice->getTotal() ?></td>
+        </tr>
+        <tr>
+          <td><?php echo link_to("Edit","invoice/edit?id=".$invoice->getId()) ?></td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr>
+          <td>Sale Type</td>
+          <td><?php echo $invoice->getSaleType() ?></td>
+        </tr>
+        <tr>
+          <td>Due date</td>
+          <td><?php echo $invoice->getDuedate() ?></td>
+        </tr>
+        <tr>
+          <td>Sales Representative</td>
+          <td><?php echo $invoice->getEmployee() ?></td>
+        </tr>
+        <tr>
+          <td>Discount Rate</td>
+          <td><?php echo $invoice->getDiscrate() ?></td>
+        </tr>
+        <tr>
+          <td>Discount Amount</td>
+          <td><?php echo $invoice->getDiscamt() ?></td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr>
+          <td>Cash</td>
+          <td><?php echo $invoice->getCash() ?></td>
+        </tr>
+        <tr>
+          <td>Cheque</td>
+          <td><?php echo $invoice->getChequeAmt() ?></td>
+        </tr>
+        <tr>
+          <td>Account</td>
+          <td><?php echo $invoice->getCredit() ?></td>
+        </tr>
+        <tr>
+          <td>Terms</td>
+          <td><?php echo $invoice->getTerms() ?></td>
+        </tr>
+        <tr>
+          <td>Notes</td>
+          <td><?php echo $invoice->getNotes() ?></td>
+        </tr>
+      </table>
+    </td>
+    <td>
+			<table>
+				<tr>
+					<td>Status</td>
+					<td><?php 
+/*
+  if status=paid,
+    if checkcleardate > today, 
+      status = pending. 
+    else 
+      status = paid
+*/
+if($invoice->getStatus()=="Paid"){
+$today=MyDateTime::today();
+$checkcleardate=MyDateTime::frommysql($invoice->getCheckcleardate());
+$status="Paid";
+if($checkcleardate->islaterthan($today))$status="Check to clear on ".$checkcleardate->toshortdate();
+echo $status;
+
+}
+else echo $invoice->getStatus();
+
+?></td>
+				</tr>
+				<!--tr>
+					<td>Cheque No</td>
+					<td><?php //echo $purchase->getChequeno() ?></td>
+				</tr>
+				<tr>
+					<td>Cheque Date</td>
+					<td><?php //echo $purchase->getChequedate() ?></td>
+				</tr>
+				<tr>
+					<td>Cheque Amount</td>
+					<td><?php //echo $purchase->getCheque() ?></td>
+				</tr-->
+				<tr>
+					<td>Cheque Data</td>
+        <?php $cheques=explode(", ",$invoice->getChequedata());foreach($cheques as $cheque)  {?>
+					<td><?php echo $cheque?></td>				
+			  </tr>
+				<tr>
+					<td></td>				
+			  <?php } ?>
+				</tr>
+			</table>
+    </td>
+  </tr>
+</table>
+          <td><?php echo link_to("Cheque Collection","event/new?parent_class=Invoice&parent_id=".$invoice->getId()."&type=ChequeCollect") ?></td>
+          <td><?php echo link_to("Cash Collection","event/new?parent_class=Invoice&parent_id=".$invoice->getId()."&type=CashCollect") ?></td>
+          <td><?php echo link_to("Bank Expense","event/new?parent_class=Invoice&parent_id=".$invoice->getId()."&type=BankExp") ?></td>
+          <td><?php echo link_to("Cancel","invoice/cancel?id=".$invoice->getId()) ?></td>
+          <td><?php if($invoice->getSaletype()!="Cash")echo link_to("Cash sale","invoice/adjustsaletype?id=".$invoice->getId()."&type=Cash") ?></td>
+          <td><?php if($invoice->getSaletype()!="Cheque")echo link_to("Cheque sale","invoice/adjustsaletype?id=".$invoice->getId()."&type=Cheque") ?></td>
+          <td><?php if($invoice->getSaletype()!="Credit")echo link_to("Account sale","invoice/adjustsaletype?id=".$invoice->getId()."&type=Account") ?></td>
+<br>
+          <td><?php echo link_to("View Details","invoice/view?id=".$invoice->getId()) ?></td>
+          <td><?php echo link_to("View Events","invoice/events?id=".$invoice->getId()) ?></td>
+          <td><?php echo link_to("View Accounting","invoice/accounting?id=".$invoice->getId()) ?></td>
+
+<br>
+<br>
+<?php //echo link_to("Add Detail","invoicedetail/new?invoice_id=".$invoice->getId()) ?>
+<?php echo form_tag_for($detailform,"@invoicedetail"); ?>
+<input type=hidden name=invoicedetail[invoice_id] value=<?php echo $invoice->getId()?>  >
+    <?php echo $detailform->renderHiddenFields(false) ?>
+<table>
+	<tr>
+		<td>Product</td>
+		<td>Description</td>
+		<td>Price</td>
+		<td>Qty</td>
+		<td>Discrate</td>
+		<td>Discamt</td>
+	</tr>
+	<tr>
+		<td><?php echo $detailform["product_id"]; ?></td>
+		<td><?php echo $detailform["description"]; ?></td>
+		<td><?php echo $detailform["price"]; ?></td>
+		<td><?php echo $detailform["qty"]; ?></td>
+		<td><?php echo $detailform["discrate"]; ?></td>
+		<td><?php echo $detailform["discamt"]; ?></td>
+	</tr>
+	<tr>
+	  <td>Barcode: <?php echo $detailform["barcode"]; ?></td>
+	</tr>
+</table>
+<input type=submit name=submit value=Save  >
+<?php 
+  //if(count($products))foreach($products as $product)
+    //echo '<a onclick="changeText('.$product->getId().')" >'.$product->getName().'</a>';
+?>
+</form>
+<br>
+<table border=1>
+  <tr>
+    <td>Barcode</td>
+    <td>Product</td>
+    <td>Description</td>
+    <td>Qty</td>
+    <td>Unit Price</td>
+    <td>Total</td>
+  </tr>
+  <?php foreach($invoice->getInvoicedetails() as $detail){?>
+  <tr>
+    <td><?php echo $detail->getBarcode() ?></td>
+    <td><?php echo link_to($detail->getProduct(),"product/view?id=".$detail->getProductId()) ?></td>
+    <td><?php echo $detail->getDescription() ?></td>
+    <td><?php echo $detail->getQty() ?></td>
+    <td><?php echo $detail->getPrice() ?></td>
+    <td><?php echo $detail->getTotal() ?></td>
+    <td><?php echo link_to("Price List","producttype/view?id=".$detail->getProduct()->getProducttypeId()) ?></td>
+    <td><?php echo link_to("Edit","invoicedetail/edit?id=".$detail->getId()) ?></td>
+    <td>
+<?php echo link_to(
+  'Delete',
+  'invoicedetail/delete?id='.$detail->getId(),
+  array('method' => 'delete', 'confirm' => 'Are you sure?')
+) ?>
+
+    </td>
+    <td><?php echo link_to("Edit Product","product/edit?id=".$detail->getProductId()) ?></td>
+  </tr>
+  <?php }?>
+</table>
+<script type="text/javascript">
+function changeText(id)
+{
+var x=document.getElementById("mySelect");
+x.value=id;
+}
+</script>
+<!--
+x.selectedIndex=id;
+-->

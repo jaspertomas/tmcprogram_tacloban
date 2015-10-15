@@ -1,0 +1,7 @@
+default:
+  is_secure: true
+  credentials: [[sales,encoder]]
+index:
+  is_secure: false
+view:
+  is_secure: false

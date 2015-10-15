@@ -1,0 +1,13 @@
+default:
+  is_secure: true
+  credentials: encoder
+index:
+  is_secure: false
+view:
+  is_secure: false
+mgrpasswd:
+  is_secure: true
+  credentials: admin
+processmgrpasswd:
+  is_secure: true
+  credentials: admin
