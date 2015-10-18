@@ -212,4 +212,4 @@ Selling Price:
   <?php }?>
 </table>
 
-
+<?php //echo link_to("Generate Invoice","purchase/generateInvoice?id=".$purchase->getId()) ?>

@@ -364,6 +364,60 @@ class purchaseActions extends autoPurchaseActions
         
         $this->redirect($request->getReferer());
     }
+    
+  public function executeDelete(sfWebRequest $request)
+  {
+    $request->checkCSRFProtection();
+    $purchase=$this->getRoute()->getObject();
+    $details=$purchase->getPurchasedetail();
+    foreach($details as $detail)
+    {
+        $detail->getStockentry()->delete();
+        $detail->delete();
+    }
+    $result=$purchase->delete();
+   
+    if ($result)
+    {
+      $this->getUser()->setFlash('notice', 'The item was deleted successfully.');
+    }
+
+    $this->redirect('home/index');
+  }
+  
+  public function executeGenerateInvoice(sfWebRequest $request)
+  {
+        $purchase=Doctrine_Query::create()
+        ->from('Purchase p')
+        ->where('p.id = '.$request->getParameter('id'))
+        ->fetchOne();
+
+	//create purchase
+	$invoice=new Invoice();
+	$invoice->setInvno(date('h:i:s a'));
+	$invoice->setCustomerId(2);//cash
+	$invoice->setIsTemporary(2);//new
+	$invoice->setDate(date("Y-m-d"));
+	$invoice->save();
+
+	//create purchase details
+	foreach($purchase->getPurchasedetail() as $purchdetail)
+	{
+		$invdetail=new InvoiceDetail();
+		$invdetail->setInvoiceId($invoice->getId());
+		$invdetail->setProductId($purchdetail->getProductId());
+		$invdetail->setDescription($purchdetail->getProduct()->getName());
+		$invdetail->setQty($purchdetail->getQty());
+		$invdetail->setPrice(0);
+		$invdetail->setTotal(0);
+		$invdetail->setUnittotal(0);
+		$invdetail->save();
+		$invdetail->updateStockentry();
+	}
+
+        $this->redirect("invoice/view?id=".$invoice->getId());
+  }
+    
   /*
   public function executeSetbarcode(sfWebRequest $request)
   {

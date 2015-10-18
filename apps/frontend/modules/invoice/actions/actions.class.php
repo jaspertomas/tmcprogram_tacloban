@@ -742,6 +742,7 @@ foreach($this->templates as $template)
 
 	//create purchase
 	$purchase=new Purchase();
+	$purchase->setDate(date("Y-m-d"));
 	$purchase->setPono(date('h:i:s a'));
 	$purchase->save();
 
