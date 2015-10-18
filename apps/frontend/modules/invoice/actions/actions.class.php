@@ -725,6 +725,35 @@ foreach($this->templates as $template)
 
     $this->redirect('home/index');
   }
+  public function executeGeneratePurchase(sfWebRequest $request)
+  {
+        $invoice=Doctrine_Query::create()
+        ->from('Invoice i')
+        ->where('i.id = '.$request->getParameter('id'))
+        ->fetchOne();
+
+	//create purchase
+	$purchase=new Purchase();
+	$purchase->setPono(date('h:i:s a'));
+	$purchase->save();
+
+	//create purchase details
+	foreach($invoice->getInvoicedetail() as $invdetail)
+	{
+		$purchdetail=new PurchaseDetail();
+		$purchdetail->setPurchaseId($purchase->getId());
+		$purchdetail->setProductId($invdetail->getProductId());
+		$purchdetail->setDescription($invdetail->getProduct()->getName());
+		$purchdetail->setQty($invdetail->getQty());
+		$purchdetail->setPrice(0);
+		$purchdetail->setTotal(0);
+		$purchdetail->setUnittotal(0);
+		$purchdetail->save();
+		$purchdetail->updateStockentry();
+	}
+
+        $this->redirect("purchase/view?id=".$purchase->getId());
+  }
 }
 
 

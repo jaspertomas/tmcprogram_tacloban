@@ -162,6 +162,9 @@ Selling Price:
     <td>Price</td>
     <td></td>
     <td></td>
+    <td></td>
+    <td>Max buy</td>
+    <td>Min buy</td>
   </tr>
   <tr>
     <td></td>
@@ -175,6 +178,9 @@ Selling Price:
     <td>List</td>
     <td></td>
     <td></td>
+    <td></td>
+    <td>price</td>
+    <td>price</td>
   </tr>
   <?php foreach($purchase->getPurchasedetail() as $detail){?>
   <tr>
@@ -200,6 +206,8 @@ Selling Price:
 
     </td>
     <td><?php echo link_to("Edit Product","product/edit?id=".$detail->getProductId()) ?></td>
+    <td><?php echo $detail->getProduct()->getMaxbuyprice() ?></td>
+    <td><?php echo $detail->getProduct()->getMinbuyprice() ?></td>
   </tr>
   <?php }?>
 </table>

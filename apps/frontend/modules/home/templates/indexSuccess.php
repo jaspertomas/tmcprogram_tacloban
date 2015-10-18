@@ -51,3 +51,19 @@ Doctrine_Query::create()
   ->set('p.autocalcbuyprice', '?', true)
   ->execute();
 ?>
+
+<?php
+/*
+      $products= Doctrine_Query::create()
+        ->from('Product p')
+  ->where('p.id >=390')
+  ->andWhere('p.id<=395')
+  ->execute();
+
+foreach($products as $product)
+{
+	$product->setName($product->getName()." Square Raised");
+	$product->save();
+}
+*/
+?>

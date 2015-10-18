@@ -477,3 +477,5 @@ $('.invoice_detail_edit_password_button').click(function(event) {
           <td><?php //echo link_to("View Events","invoice/events?id=".$invoice->getId()) ?></td>
           <td><?php //echo link_to("View Accounting","invoice/accounting?id=".$invoice->getId()) ?></td>
 -->
+
+<?php //echo link_to("Generate PO","invoice/generatePurchase?id=".$invoice->getId()) ?>

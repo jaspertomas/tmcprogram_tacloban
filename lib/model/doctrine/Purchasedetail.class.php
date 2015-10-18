@@ -85,6 +85,13 @@ class Purchasedetail extends BasePurchasedetail
   }
   public function updateProduct()
   {
+$product=$this->getProduct();
+if($product->getAutocalcbuyprice())
+{
+$product->setMinbuyprice($this->getPrice());
+$product->save();
+}
+/*
 		//if price edited, find product quote attached to this purchasedetail, update, and product->calc()
   	$quote=Fetcher::fetchOne("Quote",array('ref_class'=>"\"Purchasedetail\"",'ref_id'=>$this->getId()));
   	if($quote)
@@ -131,6 +138,7 @@ class Purchasedetail extends BasePurchasedetail
 				$this->getProduct()->calcPurchasePrices();
 			}
   	}
+*/
   }
   function isCancelled(){return $this->getIsCancelled()==1;}
   function cascadeCancel()
