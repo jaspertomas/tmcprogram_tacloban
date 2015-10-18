@@ -717,8 +717,16 @@ foreach($this->templates as $template)
   public function executeDelete(sfWebRequest $request)
   {
     $request->checkCSRFProtection();
-
-    if ($this->getRoute()->getObject()->delete())
+    $invoice=$this->getRoute()->getObject();
+    $details=$invoice->getInvoicedetail();
+    foreach($details as $detail)
+    {
+        $detail->getStockentry()->delete();
+        $detail->delete();
+    }
+    $result=$invoice->delete();
+   
+    if ($result)
     {
       $this->getUser()->setFlash('notice', 'The item was deleted successfully.');
     }
