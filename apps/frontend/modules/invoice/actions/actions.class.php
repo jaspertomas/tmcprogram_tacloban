@@ -664,14 +664,16 @@ foreach($this->templates as $template)
   {
     $this->invoices=Doctrine_Query::create()
         ->from('Invoice i')
-      	->where('is_temporary=2')
+      	->where('date="'.MyDate::today().'"')
+      	->orWhere('is_temporary=2')
       	->execute();
   }
   public function executeListcheckedout(sfWebRequest $request)
   {
     $this->invoices=Doctrine_Query::create()
         ->from('Invoice i')
-      	->where('is_temporary=1')
+      	->where('date="'.MyDate::today().'"')
+      	->orWhere('is_temporary=1')
       	->execute();
   }
   public function executeListunpaid(sfWebRequest $request)
