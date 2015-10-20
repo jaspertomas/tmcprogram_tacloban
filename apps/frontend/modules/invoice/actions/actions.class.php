@@ -439,15 +439,47 @@ foreach($this->templates as $template)
       $notice = $form->getObject()->isNew() ? 'The item was created successfully.' : 'The item was updated successfully.';
 
       try {
-
-
+        //save this for later use
+        $oldistemporary=$form->getObject()->getIsTemporary();
+        
         $invoice = $form->save();
+        
+        //save this for later use
+        $newistemporary=$invoice->getIsTemporary();
+
         if(!$invoice->getCheckcleardate())$invoice->setCheckcleardate($invoice->getDate());
 
         $invoice->calc();
         $invoice->getUpdateChequedata();
         $invoice->save();
         $invoice->genCustomer();
+        
+        //update stock entries if is_temporary changed from not closed to closed or vice versa
+        //determine if is_temporary changed 
+        //closed = 0
+        //narrow down values (remove 1) to make it easier to determine
+        if($oldistemporary==1)$oldistemporary=2;
+        if($newistemporary==1)$newistemporary=2;
+        //if it changed
+        if($oldistemporary!=$newistemporary)
+        {
+            //if closed
+            if($newistemporary==0)
+            {
+                foreach($invoice->getInvoicedetail() as $detail)
+                {
+			$detail->updateStockentry();
+                }
+            }
+            //else if not closed
+            else
+            {
+                foreach($invoice->getInvoicedetail() as $detail)
+                {
+                    $detail->getStockentry()->delete();
+                }
+            }
+        }
 
       } catch (Doctrine_Validator_Exception $e) {
 
@@ -620,6 +652,11 @@ foreach($this->templates as $template)
         $this->invoice->setInvno($invno);
         $this->invoice->calc();
         $this->invoice->save();
+        
+        foreach($this->invoice->getInvoicedetail() as $detail)
+        {
+            $detail->updateStockentry();
+        }
 
         $this->redirect($request->getReferer());
     }

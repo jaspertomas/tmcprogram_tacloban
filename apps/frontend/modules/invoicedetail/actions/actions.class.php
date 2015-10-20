@@ -59,8 +59,13 @@ class invoicedetailActions extends autoInvoicedetailActions
         $invoice=$invoicedetail->getInvoice();
         if(!$invoice->isCancelled())
         {
-		      $invoicedetail->updateStockentry();
 		      $invoicedetail->updateProduct();
+        }
+        
+        //if invoicedetail is edited while invoice is closed
+        if($invoice->getIsTemporary()==0)
+        {
+		      $invoicedetail->updateStockentry();
         }
         
         //custom calculation
