@@ -1,6 +1,9 @@
 default:
   is_secure: true
-  credentials: encoder
+  credentials: [[sales,casher,admin,encoder]]
+delete:
+  is_secure: true
+  credentials: [[encoder,admin]]
 index:
   is_secure: false
 view:

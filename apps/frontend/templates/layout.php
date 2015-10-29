@@ -59,6 +59,7 @@
     <?php echo link_to("DSR",'invoice/dsr'); ?> | 
     <?php echo link_to("DPR",'purchase/dsr'); ?> | 
     <?php echo link_to("Unpaid Invoices",'invoice/listunpaid'); ?> | 
+    <?php echo link_to("Notes",'notes/view?id=1'); ?> | 
     
     <!--links for sales-->
 	<?php }else if($sf_user->hasCredential(array('sales'), false)){?>
@@ -78,7 +79,7 @@
     <?php //echo link_to("DSR",'invoice/dsr'); ?> | 
     <?php //echo link_to("DPR",'purchase/dsr'); ?> | 
     <?php //echo link_to("Warehouses",'warehouse'); ?> | 
-    <?php //echo link_to("Notes",'notes/view?id=1'); ?> | 
+    <?php echo link_to("Notes",'notes/view?id=1'); ?> | 
     <?php //echo link_to("Stock",'stock'); ?> | 
     <?php //echo link_to("Stock Search",'product/stocksearch'); ?> 
     <?php //echo link_to("Invoice Search",'product/invoicesearch'); ?> 
