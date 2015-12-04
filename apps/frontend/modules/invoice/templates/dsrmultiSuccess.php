@@ -87,7 +87,9 @@ foreach($events as $event){
     <?php }
 */
 ?>
-    <?php foreach($invoices as $invoice)if($invoice->getTemplateId()==$template->getId())if($invoice->getStatus()!="Cancelled" and !$invoice->getHidden()){?>
+    <?php foreach($invoices as $invoice)if($invoice->getTemplateId()==$template->getId())
+        //$invoice->getStatus()!="Cancelled" and 
+        if(!$invoice->getHidden()){?>
     <tr>
       <td><?php echo $invoice->getInvoiceTemplate() ?></td>
       <td><?php echo $invoice->getCustomer()." ".$invoice->getCustomerName() ?></td>

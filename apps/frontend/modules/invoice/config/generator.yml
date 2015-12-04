@@ -14,6 +14,7 @@ generator:
     config:
       actions: ~
       fields:  
+        credit: { label: Balance}
         cheque: { label: Check no }
         chequedate: { label: Check date }
         checkcleardate: { label: Check receive date }

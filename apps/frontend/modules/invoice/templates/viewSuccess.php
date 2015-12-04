@@ -76,11 +76,25 @@
         </tr-->
         <tr>
           <td>Total</td>
-          <td><?php echo $invoice->getCash()."+".$invoice->getChequeamt()."+".$invoice->getCredit()."=".$invoice->getTotal() ?></td>
+          <td><?php echo $invoice->getTotal() ?></td>
         </tr>
       </table>
     </td>
     <td>
+      <table>
+        <tr>
+          <td>Cash</td>
+          <td><?php echo $invoice->getCash() ?></td>
+        </tr>
+        <tr>
+          <td>Cheque</td>
+          <td><?php echo $invoice->getCheque() ?></td>
+        </tr>
+        <tr>
+          <td>Balance</td>
+          <td><?php echo $invoice->getCredit() ?></td>
+        </tr>
+      </table>
     </td>
     <td>
 			<table>

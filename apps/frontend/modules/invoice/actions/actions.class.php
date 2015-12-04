@@ -147,7 +147,7 @@ class invoiceActions extends autoInvoiceActions
 
       $this->templates=Doctrine_Query::create()
         ->from('InvoiceTemplate t')
-        ->where('t.name="Invoice"')//invoice only
+//        ->where('t.name="Invoice"')//invoice only
         ->orderBy('id')
       	->execute();
 
