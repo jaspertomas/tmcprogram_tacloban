@@ -52,6 +52,7 @@
     <?php echo link_to("Product Type",'producttype/view?id=1'); ?> | 
     <?php echo link_to("Notes",'notes/view?id=1'); ?> | 
     <?php echo link_to("Unpaid Invoices",'invoice/listunpaid'); ?> | 
+    <?php echo link_to("Commission",'invoice/commission'); ?> | 
     
     <!--links for cashier-->
 	<?php }else if($sf_user->hasCredential(array('cashier'), false)){?>

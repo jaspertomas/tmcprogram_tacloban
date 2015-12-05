@@ -88,7 +88,7 @@
         </tr>
         <tr>
           <td>Cheque</td>
-          <td><?php echo $invoice->getCheque() ?></td>
+          <td><?php echo $invoice->getChequeamt() ?></td>
         </tr>
         <tr>
           <td>Balance</td>
