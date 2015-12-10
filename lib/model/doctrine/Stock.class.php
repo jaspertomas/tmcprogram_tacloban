@@ -159,20 +159,45 @@ class Stock extends BaseStock
       //set priority to 1
     foreach($stockentries as $index=>$entry)
     {
+      $saveneeded=false;
+      
       //calc and set balance
       $balance+=$entry->getQty();
-      $entry->setBalance($balance);
+        //to speed up process
+        //save only if necessary
+      if($entry->getBalance()!=$balance)
+      {
+          $entry->setBalance($balance);
+          $saveneeded=true;
+      }
 
       //calc and set priority
       if($date==$entry->getDate())
-        $entry->setPriority($priority);
+      {
+        //to speed up process
+        //save only if necessary
+        if($entry->getPriority()!=$priority)
+        {
+            $entry->setPriority($priority);
+            $saveneeded=true;
+        }
+      }
       else
       {
         $date=$entry->getDate();
         $priority=1;
-        $entry->setPriority($priority);
+        //to speed up process
+        //save only if necessary
+        if($entry->getPriority()!=$priority)
+        {
+            $entry->setPriority($priority);
+            $saveneeded=true;
+        }
       }
-      $entry->save();
+      if($saveneeded)
+      {
+          $entry->save();
+      }
       $priority++;
     }
     $this->setCurrentqty($balance);

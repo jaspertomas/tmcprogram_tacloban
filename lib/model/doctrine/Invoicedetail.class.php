@@ -58,7 +58,7 @@ class Invoicedetail extends BaseInvoicedetail
     $stockentry=$this->getStockentry();
 
     $stock=$stockentry->getStock();
-    $qty=$this->getQty()*-1;
+    $qty=$this->getQty()*-1;//negative because stock goes out (sales)
     
     //if data not the same
     if(

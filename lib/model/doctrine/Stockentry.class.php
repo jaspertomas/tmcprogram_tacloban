@@ -44,6 +44,7 @@ class Stockentry extends BaseStockentry
         ->orderBy('date desc, priority desc')
         ->where('stock_id ='.$this->getStockId())
         ->andWhere('date <= "'.$this->getDate().'"')
+      	->andWhere('se.is_cancelled = 0')
         ->execute();
 
       if(count($entries)==0)return null;
