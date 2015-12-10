@@ -11,6 +11,9 @@
   <tr>
     <td><?php echo link_to("View all warehouses","product/inventory?id=".$stock->getProductId()) ?></td>
   </tr>
+  <tr>
+    <td><?php echo link_to("Recalculate","stock/calc?id=".$stock->getId()) ?></td>
+  </tr>
   <!--tr>
     <td><?php //echo link_to("Calculate","stock/calc?id=".$stock->getId()) ?></td>
   </tr-->

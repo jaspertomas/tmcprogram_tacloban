@@ -175,6 +175,8 @@ class Stock extends BaseStock
       $entry->save();
       $priority++;
     }
+    $this->setCurrentqty($balance);
+    $this->save();
   }
 
   public function delete(Doctrine_Connection $conn=null)
